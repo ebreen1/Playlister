@@ -40,13 +40,17 @@ export const updatePlaylistById = (id, playlist) => {
         playlist : playlist
     })
 }
+export const duplicatePlaylistById = (id) => api.get(`/duplicate/${id}`)
+export const publishPlaylistById = (id) => api.get(`/publish/${id}`)
 
 const apis = {
     createPlaylist,
     deletePlaylistById,
     getPlaylistById,
     getPlaylistPairs,
-    updatePlaylistById
+    updatePlaylistById,
+    duplicatePlaylistById,
+    publishPlaylistById
 }
 
 export default apis

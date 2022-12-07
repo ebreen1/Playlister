@@ -35,6 +35,7 @@ const HomeScreen = () => {
                         key={pair._id}
                         idNamePair={pair}
                         selected={store.currentList !== null && pair._id === store.currentList._id}
+                        published={pair.published}
                     />
                 ))
                 

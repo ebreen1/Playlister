@@ -5,6 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RedoIcon from '@mui/icons-material/Redo';
 import UndoIcon from '@mui/icons-material/Undo';
 import CloseIcon from '@mui/icons-material/HighlightOff';
+import { Box } from '@mui/material';
 
 /*
     This toolbar is a functional React component that
@@ -12,50 +13,85 @@ import CloseIcon from '@mui/icons-material/HighlightOff';
     
     @author McKilla Gorilla
 */
-function EditToolbar() {
+function EditToolbar(props) {
     const { store } = useContext(GlobalStoreContext);
+    const { published } = props;
+    
 
-    function handleAddNewSong() {
-        store.addNewSong();
-    }
     function handleUndo() {
         store.undo();
     }
     function handleRedo() {
         store.redo();
     }
-    function handleClose() {
-        store.closeCurrentList();
+
+    function handlePublish() {
+        store.publishPlaylist();
     }
+
+    function handleDuplicate() {
+        store.duplicatePlaylist();
+    }
+
+    async function handleDeleteList(event) {
+        event.stopPropagation();
+        let _id = event.target.id;
+        _id = ("" + _id).substring("delete-list-".length);
+        store.markListForDeletion();
+    }
+
+    let undoButton = <Button 
+        disabled={!store.canUndo()}
+        id='undo-button'
+        onClick={handleUndo}
+        variant="contained">
+            Undo
+    </Button>
+
+    let redoButton = <Button 
+        disabled={!store.canRedo()}
+        id='redo-button'
+        onClick={handleRedo}
+        variant="contained">
+            Redo
+    </Button>
+
+    let gap = <div style={{width: '40%'}}/>
+
+    let publishButton = <Button 
+        disabled={!store.canPublish()}
+        id='publish-button'
+        onClick={handlePublish}
+        variant="contained">
+            Publish
+    </Button>
+
+    if(published) {
+        undoButton = "";
+        redoButton = "";
+        gap = <div style={{width: '72%'}}/>
+        publishButton = "";
+    }
+
     return (
         <div id="edit-toolbar">
-            <Button
-                disabled={!store.canAddNewSong()}
-                id='add-song-button'
-                onClick={handleAddNewSong}
+            
+            {undoButton}
+            {redoButton}
+            {gap}
+            {publishButton}
+            <Button 
+                id='duplicate-button'
+                onClick={handleDuplicate}
                 variant="contained">
-                <AddIcon />
+                    Duplicate
             </Button>
             <Button 
-                disabled={!store.canUndo()}
-                id='undo-button'
-                onClick={handleUndo}
+                disabled={!store.canDelete()}
+                id='delete-button'
+                onClick={(event) => handleDeleteList(event)}
                 variant="contained">
-                    <UndoIcon />
-            </Button>
-            <Button 
-                disabled={!store.canRedo()}
-                id='redo-button'
-                onClick={handleRedo}
-                variant="contained">
-                    <RedoIcon />
-            </Button>
-            <Button 
-                disabled={!store.canClose()}
-                id='close-button'
-                onClick={handleClose}
-                variant="contained">
-                    <CloseIcon />
+                    Delete
             </Button>
         </div>
     )

@@ -134,7 +134,7 @@ function GlobalStoreContextProvider(props) {
                 return setStore({
                     currentModal : CurrentModal.DELETE_LIST,
                     idNamePairs: store.idNamePairs,
-                    currentList: null,
+                    currentList: store.currentList,
                     currentSongIndex: -1,
                     currentSong: null,
                     newListCounter: store.newListCounter,
@@ -327,7 +327,7 @@ function GlobalStoreContextProvider(props) {
     // OF A LIST, WHICH INCLUDES USING A VERIFICATION MODAL. THE
     // FUNCTIONS ARE markListForDeletion, deleteList, deleteMarkedList,
     // showDeleteListModal, and hideDeleteListModal
-    store.markListForDeletion = function (id) {
+    store.markListForDeletion = function () {
         async function getListToDelete(id) {
             let response = await api.getPlaylistById(id);
             if (response.data.success) {
@@ -338,7 +338,7 @@ function GlobalStoreContextProvider(props) {
                 });
             }
         }
-        getListToDelete(id);
+        getListToDelete(store.currentList._id);
     }
     store.deleteList = function (id) {
         async function processDelete(id) {
@@ -354,6 +354,35 @@ function GlobalStoreContextProvider(props) {
         store.deleteList(store.listIdMarkedForDeletion);
         store.hideModals();
         
+    }
+
+    store.duplicatePlaylist = function() {
+        async function processDuplicate() {
+            let response = await api.duplicatePlaylistById(store.currentList._id);
+            store.loadIdNamePairs();
+            if(response.data.sucess) {
+                history.push("/");
+            }
+            else {
+                console.log("Failed to duplicate playlist");
+            }
+        }
+        processDuplicate();
+    }
+
+    store.publishPlaylist = function() {
+        async function processPublish() {
+            let response = await api.publishPlaylistById(store.currentList._id);
+            store.loadIdNamePairs();
+            if(response.data.sucess) {
+                history.push("/");
+            }
+            else {
+                console.log("Failed to duplicate playlist");
+            }
+        }
+        
+        processPublish();
     }
     // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
     // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
@@ -540,6 +569,12 @@ function GlobalStoreContextProvider(props) {
     }
     store.canClose = function() {
         return (store.currentList !== null);
+    }
+    store.canPublish = function() {
+        return (store.currentList.songs.length > 0);
+    }
+    store.canDelete = function() {
+        return (store.currentList.ownerEmail === auth.user.email);
     }
 
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME

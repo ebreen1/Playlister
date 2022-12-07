@@ -73,7 +73,18 @@ body {
 
 #edit-toolbar {
   background-color: transparent;
-  transform: translate(41%, 0%);
+  width: 100%;
+  display: flex;
+}
+
+#edit-toolbar > button {
+  background-color: #DDDDDD;
+  color: black;
+  border-radius: 10px;
+  margin: 5px;
+  width: 10%;
+  border: 1px solid black;
+  font-weight: bold;
 }
 
 .playlister-button,
@@ -271,7 +282,7 @@ input {
 }
 
 .disabled {
-  background-color: lightgray;
+  background-color: green;
 }
 
 .disabled:hover {

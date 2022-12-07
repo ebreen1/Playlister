@@ -21,7 +21,7 @@ function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [editActive, setEditActive] = useState(false);
     const [text, setText] = useState("");
-    const { idNamePair, selected } = props;
+    const { idNamePair, selected, published } = props;
 
     function handleLoadList(event, id) {
         console.log("handleLoadList for " + id);
@@ -129,7 +129,17 @@ function ListCard(props) {
                 song={null}
             />
             </List>;
-        editToolbar = <EditToolbar/>
+        editToolbar = <EditToolbar
+                published = {published}
+        />
+    }
+
+    let backgroundColor = '#FFFFF1';
+    if(published) {
+        backgroundColor = '#D4D4F5';
+        if(selected) {
+            backgroundColor = '#D4AF37';
+        }
     }
 
     let cardElement =  
@@ -138,13 +148,15 @@ function ListCard(props) {
             id={idNamePair._id}
             key={idNamePair._id}
             sx={{borderRadius:"25px", p: "10px", marginTop: '15px', display: 'flex', flexDirection: 'column', paddingLeft: 4 }}
-            style={{transform:"translate(1%,0%)", width: '98%', fontSize: '24pt', border: '2px solid #000000', height: height, backgroundColor: '#FFFFF1' }}
+            style={{transform:"translate(1%,0%)", width: '98%', fontSize: '24pt', border: '2px solid #000000', height: height, backgroundColor: backgroundColor }}
             button
         >
             <Box sx={{ alignSelf: 'start' }}>{idNamePair.name}</Box>
             <Box sx={{ alignSelf: 'start', fontSize: '16pt' }}>By: {idNamePair.owner}</Box>
             <Box sx={{ alignSelf: 'stretch' }}>{songList}</Box>
-            {editToolbar}
+            <Box sx={{ alignSelf: 'stretch' }}>
+                {editToolbar}
+                </Box>
             <Box sx={{ alignSelf: 'end' }}>{arrowButton}</Box>
         </ListItem>
 
