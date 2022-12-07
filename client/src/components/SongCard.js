@@ -45,7 +45,27 @@ function SongCard(props) {
         }
     }
 
-    let cardClass = "list-card unselected-list-card";
+    function handleAddSong(event) {
+        store.addNewSong();
+    }
+
+    let cardClass = "list-card unselected-list-card song-card";
+
+    if(props.id === "addSong"){
+        return (
+            <div
+                key={index}
+                id="add-song-card"
+                className={cardClass}
+                draggable="true"
+                onClick={handleAddSong}
+                style={{fontSize: '48pt', textAlign: 'center', verticalAlign: 'middle'}}
+            >
+                +
+            </div>
+        );
+    }
+
     return (
         <div
             key={index}
@@ -59,13 +79,7 @@ function SongCard(props) {
             draggable="true"
             onClick={handleClick}
         >
-            {index + 1}.
-            <a
-                id={'song-' + index + '-link'}
-                className="song-link"
-                href={"https://www.youtube.com/watch?v=" + song.youTubeId}>
-                {song.title} by {song.artist}
-            </a>
+            {index + 1}.&nbsp;{song.title} by {song.artist}
             <Button
                 sx={{transform:"translate(-5%, -5%)", width:"5px", height:"30px"}}
                 variant="contained"

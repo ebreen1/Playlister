@@ -96,8 +96,11 @@ export default function AppBanner() {
     }
 
     return (
-        <Box sx={{flexGrow: 1}}>
-            <AppBar position="static">
+        <Box
+            sx={{flexGrow: 1}}
+            style={{backgroundColor: '#C4C4C4'}}
+        >
+            <AppBar position="static" style={{backgroundColor: '#E0E0E0'}}>
                 <Toolbar>
                     <Typography                        
                         variant="h4"
@@ -105,10 +108,9 @@ export default function AppBanner() {
                         component="div"
                         sx={{ display: { xs: 'none', sm: 'block' } }}                        
                     >
-                        <Link onClick={handleHouseClick} style={{ textDecoration: 'none', color: 'white' }} to='/'>⌂</Link>
+                        <img src="/playlister-small.png"/>
                     </Typography>
-                    <Box sx={{ flexGrow: 1 }}>{editToolbar}</Box>
-                    <Box sx={{ height: "90px", display: { xs: 'none', md: 'flex' } }}>
+                    <Box sx={{ height: "90px", display: { xs: 'none', md: 'flex' }, alignSelf:'end' }}>
                         <IconButton
                             size="large"
                             edge="end"

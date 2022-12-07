@@ -1,7 +1,10 @@
 import React, { useContext, useEffect } from 'react'
 import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
-import MUIDeleteModal from './MUIDeleteModal'
+import MUIDeleteModal from './MUIDeleteModal';
+import MUIEditSongModal from './MUIEditSongModal';
+import MUIRemoveSongModal from './MUIRemoveSongModal';
+import Statusbar from './Statusbar';
 
 import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab'
@@ -25,46 +28,42 @@ const HomeScreen = () => {
     let listCard = "";
     if (store) {
         listCard = 
-            <List sx={{width: '100%', bgcolor: 'background.paper', mb:"20px" }}>
+            <List sx={{width: '100%', bgcolor: '#C4C4C4FF', mb:"20px" }}>
             {
                 store.idNamePairs.map((pair) => (
                     <ListCard
                         key={pair._id}
                         idNamePair={pair}
-                        selected={false}
+                        selected={store.currentList !== null && pair._id === store.currentList._id}
                     />
                 ))
                 
             }
-            <Fab sx={{transform:"translate(1150%, 10%)"}}
-                color="primary" 
-                aria-label="add"
-                id="add-list-button"
-                onClick={handleCreateNewList}
-            >
-                <AddIcon />
-            </Fab>
             </List>;
     }
+
+    let modalJSX = "";
+    if (store.isEditSongModalOpen()) {
+        modalJSX = <MUIEditSongModal />;
+    }
+    else if (store.isRemoveSongModalOpen()) {
+        modalJSX = <MUIRemoveSongModal />;
+    }
+
     return (
-        <div id="playlist-selector">
-            <div id="list-selector-heading">
-            <Fab sx={{transform:"translate(-20%, 0%)"}}
-                color="primary" 
-                aria-label="add"
-                id="add-list-button"
-                onClick={handleCreateNewList}
-            >
-                <AddIcon />
-            </Fab>
-                Your Playlists
-            </div>
-            <Box sx={{bgcolor:"background.paper"}} id="list-selector-list">
+        <div
+            id="playlist-selector"
+            style={{height: '70%'}}
+        >
+            
+            <Box sx={{bgcolor:"#C4C4C4"}} id="list-selector-list">
                 {
                     listCard
                 }
                 <MUIDeleteModal />
+                {modalJSX}
             </Box>
+            <Statusbar handleCreateNewList={handleCreateNewList}/>
         </div>)
 }
 

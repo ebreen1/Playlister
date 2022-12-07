@@ -1,11 +1,14 @@
 import { useContext, useState } from 'react'
 import { GlobalStoreContext } from '../store'
+import SongCard from './SongCard'
 import Box from '@mui/material/Box';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
+import List from '@mui/material/List';
 import TextField from '@mui/material/TextField';
+import EditToolbar from './EditToolbar';
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -31,6 +34,20 @@ function ListCard(props) {
 
             // CHANGE THE CURRENT LIST
             store.setCurrentList(id);
+        }
+    }
+
+    function handleUnloadList(event, id) {
+        console.log("handleUnloadList for " + id);
+        if (!event.target.disabled) {
+            let _id = event.target.id;
+            if (_id.indexOf('list-card-text-') >= 0)
+                _id = ("" + _id).substring("list-card-text-".length);
+
+            console.log("load " + event.target.id);
+
+            // CLOSE THE CURRENT LIST
+            store.closeCurrentList();
         }
     }
 
@@ -73,30 +90,62 @@ function ListCard(props) {
     if (store.isListNameEditActive) {
         cardStatus = true;
     }
-    let cardElement =
+
+    let height = '120px';
+    let arrowButton = 
+        <IconButton onClick={(event) => {
+                handleLoadList(event, idNamePair._id)
+            }} aria-label='expand'>
+            <KeyboardDoubleArrowDownIcon style={{fontSize:'24pt'}} />
+        </IconButton>;
+    let songList = "";
+    let editToolbar = "";
+
+    if(props.selected) {
+        height = '600px';
+        arrowButton = 
+            <IconButton onClick={(event) => {
+                    handleUnloadList(event, idNamePair._id)
+                }} aria-label='expand'>
+                <KeyboardDoubleArrowUpIcon style={{fontSize:'24pt', bgcolor: '#FFFFF1'}} />
+            </IconButton>;
+        songList = 
+            <List 
+                id="playlist-cards" 
+                sx={{overflow: 'scroll', height: '400px'}}
+            >
+            {store.currentList.songs.map((song, index) => (
+                <SongCard
+                    id={'playlist-song-' + (index)}
+                    key={'playlist-song-' + (index)}
+                    index={index}
+                    song={song}
+                />
+            ))}
+            <SongCard
+                id='addSong'
+                key='addSong'
+                index={store.currentList.songs.length}  
+                song={null}
+            />
+            </List>;
+        editToolbar = <EditToolbar/>
+    }
+
+    let cardElement =  
         <ListItem
+            
             id={idNamePair._id}
             key={idNamePair._id}
-            sx={{borderRadius:"25px", p: "10px", bgcolor: '#8000F00F', marginTop: '15px', display: 'flex', p: 1 }}
-            style={{transform:"translate(1%,0%)", width: '98%', fontSize: '48pt' }}
+            sx={{borderRadius:"25px", p: "10px", marginTop: '15px', display: 'flex', flexDirection: 'column', paddingLeft: 4 }}
+            style={{transform:"translate(1%,0%)", width: '98%', fontSize: '24pt', border: '2px solid #000000', height: height, backgroundColor: '#FFFFF1' }}
             button
-            onClick={(event) => {
-                handleLoadList(event, idNamePair._id)
-            }}
         >
-            <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
-            <Box sx={{ p: 1 }}>
-                <IconButton onClick={handleToggleEdit} aria-label='edit'>
-                    <EditIcon style={{fontSize:'48pt'}} />
-                </IconButton>
-            </Box>
-            <Box sx={{ p: 1 }}>
-                <IconButton onClick={(event) => {
-                        handleDeleteList(event, idNamePair._id)
-                    }} aria-label='delete'>
-                    <DeleteIcon style={{fontSize:'48pt'}} />
-                </IconButton>
-            </Box>
+            <Box sx={{ alignSelf: 'start' }}>{idNamePair.name}</Box>
+            <Box sx={{ alignSelf: 'start', fontSize: '16pt' }}>By: {idNamePair.owner}</Box>
+            <Box sx={{ alignSelf: 'stretch' }}>{songList}</Box>
+            {editToolbar}
+            <Box sx={{ alignSelf: 'end' }}>{arrowButton}</Box>
         </ListItem>
 
     if (editActive) {
