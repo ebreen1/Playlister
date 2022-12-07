@@ -5,18 +5,39 @@ import MUIDeleteModal from './MUIDeleteModal';
 import MUIEditSongModal from './MUIEditSongModal';
 import MUIRemoveSongModal from './MUIRemoveSongModal';
 import Statusbar from './Statusbar';
+import VideoWindow from './VideoWindow';
 
-import AddIcon from '@mui/icons-material/Add';
-import Fab from '@mui/material/Fab'
-import List from '@mui/material/List';
-import Box from '@mui/material/Box'
+import { Typography, List, Box, Tabs, Tab } from '@mui/material';
+
 /*
     This React component lists all the top5 lists in the UI.
     
     @author McKilla Gorilla
 */
+
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+
 const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
+    const [value, setValue] = React.useState("player");
 
     useEffect(() => {
         store.loadIdNamePairs();
@@ -25,6 +46,19 @@ const HomeScreen = () => {
     function handleCreateNewList() {
         store.createNewList();
     }
+
+    function handleTabChange(event, newValue) {
+        setValue(newValue);
+    }
+
+    function tabProps(index) {
+        return {
+            id: `tab-${index}`,
+            'aria-controls': `tabpanel-${index}`,
+            style: {bgcolor: '#C4C4C4', borderRadius: '10px 10px 0px 0px', border: '1px solid black'}
+        }
+    }
+
     let listCard = "";
     if (store) {
         listCard = 
@@ -63,6 +97,9 @@ const HomeScreen = () => {
                 }
                 <MUIDeleteModal />
                 {modalJSX}
+            </Box>
+            <Box sx={{bgcolor:"#C4C4C4"}} id="video-window">
+                <VideoWindow/>
             </Box>
             <Statusbar handleCreateNewList={handleCreateNewList}/>
         </div>)
