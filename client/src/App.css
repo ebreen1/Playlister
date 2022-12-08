@@ -191,7 +191,6 @@ body {
 }
 
 #player-toolbar {
-  transform: translate(0%, 20%);
   background-color: #FFFFF1;
   width: 90%;
   height: 50px;
@@ -201,8 +200,16 @@ body {
   justify-content: center;
   position: relative;
   left: 5%;
+  top: 5%;
   border: 1px solid black;
   font-size: 24pt;
+}
+
+#published-playlist-songs {
+  background-color: #2C2F70;
+  color: #D4AF37;
+  border-radius: 15px;
+  margin-top: 10px;
 }
 
 

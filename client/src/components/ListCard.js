@@ -24,6 +24,7 @@ function ListCard(props) {
     const { idNamePair, selected, published } = props;
 
     function handleLoadList(event, id) {
+        event.stopPropagation();
         console.log("handleLoadList for " + id);
         if (!event.target.disabled) {
             let _id = event.target.id;
@@ -38,6 +39,7 @@ function ListCard(props) {
     }
 
     function handleUnloadList(event, id) {
+        event.stopPropagation();
         console.log("handleUnloadList for " + id);
         if (!event.target.disabled) {
             let _id = event.target.id;
@@ -52,7 +54,6 @@ function ListCard(props) {
     }
 
     function handleToggleEdit(event) {
-        event.stopPropagation();
         toggleEdit();
     }
 
@@ -69,6 +70,15 @@ function ListCard(props) {
         let _id = event.target.id;
         _id = ("" + _id).substring("delete-list-".length);
         store.markListForDeletion(id);
+    }
+
+    function handleClick(event) {
+        event.stopPropagation();
+        if (event.detail === 1) {
+            store.playPlaylist(idNamePair._id);
+        } else if (event.detail === 2) {
+            handleToggleEdit(event);
+        }
     }
 
     function handleKeyPress(event) {
@@ -138,6 +148,19 @@ function ListCard(props) {
     if(published) {
         backgroundColor = '#D4D4F5';
         if(selected) {
+            songList = 
+            <List id="published-playlist-songs"
+                sx={{overflow: 'scroll', height: '400px'}}
+            >
+                {store.currentList.songs.map((song, index) => (
+                    <ListItem
+                        id={'playlist-song-' + (index)}
+                        key={'playlist-song-' + (index)}
+                    >
+                        {index + 1}. {song.title} by {song.artist}
+                    </ListItem>
+                ))}
+            </List>
             backgroundColor = '#D4AF37';
         }
     }
@@ -149,6 +172,7 @@ function ListCard(props) {
             key={idNamePair._id}
             sx={{borderRadius:"25px", p: "10px", marginTop: '15px', display: 'flex', flexDirection: 'column', paddingLeft: 4 }}
             style={{transform:"translate(1%,0%)", width: '98%', fontSize: '24pt', border: '2px solid #000000', height: height, backgroundColor: backgroundColor }}
+            onClick={handleClick}
             button
         >
             <Box sx={{ alignSelf: 'start' }}>{idNamePair.name}</Box>

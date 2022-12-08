@@ -16,29 +16,23 @@ import { Box, Tabs, Tab } from '@mui/material';
     @author McKilla Gorilla
 */
 
-const HomeScreen = () => {
+const VideoWindow = (props) => {
     const { store } = useContext(GlobalStoreContext);
     const [value, setValue] = React.useState(0);
+    let songs = store.listPlaying?.songs;
+    let youtubeIds = [];
+
+    console.log("songs: " + songs);
+    if(songs) {
+        youtubeIds = songs.map(song => song.youTubeId);
+        console.log(youtubeIds);
+    }
 
     function handleTabChange(event, newValue) {
         setValue(newValue);
     }
 
-    function handleBack(){
-
-    }
-
-    function handleForward(){
-
-    }
-
-    function handleStop(){
-
-    }
-
-    function handlePlay(){
-
-    }
+    
 
     function tabProps(index) {
         return {
@@ -61,31 +55,15 @@ const HomeScreen = () => {
                 <Tab label="Player" {...tabProps(0)}/>
                 <Tab label="Comments" {...tabProps(1)}/>
             </Tabs>
-            <Box style={(value===0) ? {display: 'flex', flexDirection: 'column', alignSelf: 'stretch'} : {display: 'none'}}>
-                <YoutubePlayer/>
-                <Box id='song-info-box'>
-                    <Box>Playlist: </Box>
-                    <Box>Song #: </Box>
-                    <Box>Title: </Box>
-                    <Box>Artist: </Box>
-                    <div id="player-toolbar">
-                        <IconButton onClick={handleBack}>
-                            <FastRewindIcon style={{fontSize: '24pt', color: 'black'}}/>
-                        </IconButton>
-                        <IconButton onClick={handleStop}>
-                            <StopIcon style={{fontSize: '24pt', color: 'black'}}/>
-                        </IconButton>
-                        <IconButton onClick={handlePlay}>
-                            <PlayArrowIcon style={{fontSize: '24pt', color: 'black'}}/>
-                        </IconButton>
-                        <IconButton onClick={handleForward}>
-                            <FastForwardIcon style={{fontSize: '24pt', color: 'black'}}/>
-                        </IconButton>
-                    </div>
-                </Box>
+            <Box style={(value===0 && store.listPlaying && store.listPlaying.songs.length > 0) ? {display: 'flex', flexDirection: 'column', alignSelf: 'stretch'} : {display: 'none'}}>
+                <YoutubePlayer
+                    playlist = {youtubeIds}
+                    listPlaying = {store.listPlaying}
+                />
+                
             </Box>
 
         </div>)
 }
 
-export default HomeScreen;
+export default VideoWindow;

@@ -6,6 +6,7 @@ import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import { withTheme } from '@emotion/react';
 
 const style1 = {
     position: 'absolute',
@@ -15,7 +16,7 @@ const style1 = {
     width: 345,
     height: 250,
     backgroundSize: "contain",
-    backgroundImage: `url(https://i.insider.com/602ee9ced3ad27001837f2ac?})`,
+    backgroundColor: 'white',
     border: '3px solid #000',
     padding: '20px',
     boxShadow: 24,
